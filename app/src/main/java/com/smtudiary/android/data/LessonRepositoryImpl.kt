@@ -16,7 +16,7 @@ class LessonRepositoryImpl @Inject constructor(
     private val dao: LessonsDao
 ) : LessonRepository {
     override suspend fun observeLessons(group: String): Flow<List<Lesson>> =
-        dao.observeByGroupOrderByDay(group).map { it.map(LessonEntity::toDomain) }
+        dao.observeByGroupOrderByDay(group.toInt()).map { it.map(LessonEntity::toDomain) }
 
     override suspend fun refreshLessons(group: String): Result<Unit> = suspendRunCatching {
         dao.upsertAll(api.getLessonsByGroup(group).map(LessonDto::toEntity) )

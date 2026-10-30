@@ -7,7 +7,7 @@ import java.util.UUID
 
 fun LessonDto.toEntity() = LessonEntity(
     stableId(), name, time, teacher, week,
-    room, group, day
+    room, group.toInt(), day
 )
 
 // The API sends no ids; deriving one from the content keeps refreshes upserting the same rows.
@@ -17,5 +17,5 @@ private fun LessonDto.stableId(): UUID = UUID.nameUUIDFromBytes(
 
 fun LessonEntity.toDomain() = Lesson(
     id, name, time, teacher, week,
-    room, group, day
+    room, group.toString(), day
 )

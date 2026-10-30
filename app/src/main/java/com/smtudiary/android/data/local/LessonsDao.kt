@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface LessonsDao {
 
     @Query("SELECT * FROM lessons WHERE `group` = :group ORDER BY day")
-    fun observeByGroupOrderByDay(group: String): Flow<List<LessonEntity>>
+    fun observeByGroupOrderByDay(group: Int): Flow<List<LessonEntity>>
 
     @Upsert
     suspend fun upsertAll(lessons: List<LessonEntity>)

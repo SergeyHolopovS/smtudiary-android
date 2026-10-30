@@ -1,10 +1,23 @@
 package com.smtudiary.android.data.local
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.UUID
 
-@Entity(tableName = "lessons")
+@Entity(
+    tableName = "lessons",
+    foreignKeys = [
+        ForeignKey(
+            entity = GroupEntity::class,
+            parentColumns = ["group"],
+            childColumns = ["group"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index("group")]
+)
 data class LessonEntity (
 
     @PrimaryKey
@@ -20,7 +33,7 @@ data class LessonEntity (
 
     val room : String,
 
-    val group : String,
+    val group : Int,
 
     val day: String,
 

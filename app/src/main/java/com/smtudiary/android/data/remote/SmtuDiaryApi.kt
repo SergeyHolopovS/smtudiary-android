@@ -5,7 +5,10 @@ import retrofit2.http.Path
 
 interface SmtuDiaryApi {
 
-    @GET("{group}")
+    @GET("lessons/{group}")
     suspend fun getLessonsByGroup(@Path("group") group: String): List<LessonDto>
+
+    @GET("groups")
+    suspend fun getGroups(): List<GroupDto>
 
 }

@@ -45,7 +45,7 @@ object NetworkModule {
     @Provides @Singleton
     fun provideApi(client: OkHttpClient, json: Json): SmtuDiaryApi =
         Retrofit.Builder()
-            .baseUrl("https://smtudiary.ru/api/v1/lessons/")
+            .baseUrl("https://smtudiary.ru/api/v1/")
             .client(client)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
