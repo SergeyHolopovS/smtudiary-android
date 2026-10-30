@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Шапка отделена от листа просветом, пары вырезаны из листа -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M31,42.5V38A6,6 0,0 1,37,32H71A6,6 0,0 1,77,38V42.5Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M31,45.5H77V72A6,6 0,0 1,71,78H37A6,6 0,0 1,31,72ZM39.5,50H68.5A2.5,2.5 0,0 1,68.5,55H39.5A2.5,2.5 0,0 1,39.5,50ZM39.5,59H68.5A2.5,2.5 0,0 1,68.5,64H39.5A2.5,2.5 0,0 1,39.5,59ZM39.5,68H58.5A2.5,2.5 0,0 1,58.5,73H39.5A2.5,2.5 0,0 1,39.5,68Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,27A2,2 0,0 1,44,29V35A2,2 0,0 1,40,35V29A2,2 0,0 1,42,27ZM66,27A2,2 0,0 1,68,29V35A2,2 0,0 1,64,35V29A2,2 0,0 1,66,27Z" />
+</vector>

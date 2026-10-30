@@ -51,6 +51,12 @@ ksp {
 }
 
 dependencies {
+    // Settings storage
+    implementation(libs.androidx.datastore.preferences)
+
+    // Animations
+    implementation(libs.androidx.compose.animation)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

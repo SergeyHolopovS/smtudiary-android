@@ -1,11 +1,12 @@
 package com.smtudiary.android.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val primary = hexToColor("#330043")
+val secondary = hexToColor("#9D00DB")
+val background = hexToColor("#eee4f0")
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+fun hexToColor(hex: String): Color {
+    return Color(hex.toColorInt())
+}
