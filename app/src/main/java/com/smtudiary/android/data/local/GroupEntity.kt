@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "groups")
 data class GroupEntity(
     @PrimaryKey
-    val group: Int
+    val group: String
 )

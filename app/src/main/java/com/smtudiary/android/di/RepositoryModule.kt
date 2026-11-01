@@ -1,6 +1,8 @@
 package com.smtudiary.android.di
 
+import com.smtudiary.android.data.GroupRepositoryImpl
 import com.smtudiary.android.data.LessonRepositoryImpl
+import com.smtudiary.android.data.repository.GroupRepository
 import com.smtudiary.android.data.repository.LessonRepository
 import dagger.Binds
 import dagger.Module
@@ -15,5 +17,9 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindLessonsRepository(impl: LessonRepositoryImpl): LessonRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindGroupsRepository(impl: GroupRepositoryImpl): GroupRepository
 
 }

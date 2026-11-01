@@ -12,6 +12,6 @@ interface GroupsDao {
     fun observeGroups(): Flow<List<GroupEntity>>
 
     @Upsert
-    suspend fun upsert(groups: List<GroupEntity>)
+    suspend fun upsertAll(groups: List<GroupEntity>)
 
 }

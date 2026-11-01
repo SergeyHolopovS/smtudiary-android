@@ -9,6 +9,6 @@ interface SmtuDiaryApi {
     suspend fun getLessonsByGroup(@Path("group") group: String): List<LessonDto>
 
     @GET("groups")
-    suspend fun getGroups(): List<GroupDto>
+    suspend fun getGroups(): List<String>
 
 }

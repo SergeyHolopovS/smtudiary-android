@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,7 +55,6 @@ private val russianDaysOfWeek: Map<String, DayOfWeek> = mapOf(
     "четверг" to DayOfWeek.THURSDAY,
     "пятница" to DayOfWeek.FRIDAY,
     "суббота" to DayOfWeek.SATURDAY,
-    "воскресенье" to DayOfWeek.SUNDAY,
 )
 
 @Composable
@@ -63,9 +63,11 @@ fun HomeScreen(
 ) {
     val lessons by viewModel.lessons.collectAsStateWithLifecycle()
 
+    val dayIndex = getDayIndex()
+    var weeksAhead by remember { mutableLongStateOf(if (dayIndex != 6) 0 else 1) }
     var selectedDay by remember {
         mutableIntStateOf(
-            Instant.now().atZone(ZoneId.of("Europe/Moscow")).dayOfWeek.value - 1
+            if (dayIndex != 6) dayIndex else 0
         )
     }
 
@@ -110,7 +112,8 @@ fun HomeScreen(
                                 items = state.lessons.filter { element ->
                                     element.day == days[day] && (currentWeekType(
                                         weekdayString(
-                                            dayOfWeekByIndex(day)
+                                            dayOfWeek = dayOfWeekByIndex(day),
+                                            weeksAhead = weeksAhead
                                         )
                                     ) == element.week)
                                 },
@@ -273,3 +276,6 @@ fun currentWeekType(now: Instant = Instant.now()): WeekType {
     val weeksPassed = ChronoUnit.DAYS.between(weekStart, today) / 7
     return if (weeksPassed % 2 == 0L) WeekType.UPPER else WeekType.LOWER
 }
+
+fun getDayIndex()
+    = Instant.now().atZone(ZoneId.of("Europe/Moscow")).dayOfWeek.value - 1

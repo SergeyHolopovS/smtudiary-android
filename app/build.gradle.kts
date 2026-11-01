@@ -56,6 +56,7 @@ dependencies {
 
     // Animations
     implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.material3)
 
     // Hilt
     implementation(libs.hilt.android)
