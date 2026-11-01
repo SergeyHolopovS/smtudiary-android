@@ -1,6 +1,5 @@
 package com.smtudiary.android.di
 
-import android.R.attr.level
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import com.smtudiary.android.data.remote.SmtuDiaryApi

@@ -9,18 +9,19 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-object SettingsKeys {
-    val GROUP = stringPreferencesKey("")
-}
+private val GROUP_KEY = stringPreferencesKey("selected_group")
+private val LEGACY_GROUP_KEY = stringPreferencesKey("")
 
 @Singleton
 class SettingsRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
 
-    val group: Flow<String> = dataStore.data.map { preferences -> preferences[SettingsKeys.GROUP] ?: "" }
+    val group: Flow<String> = dataStore.data.map { preferences ->
+        preferences[GROUP_KEY] ?: preferences[LEGACY_GROUP_KEY].orEmpty()
+    }
 
     suspend fun setGroup(group: String) =
-        dataStore.edit { preferences -> preferences[SettingsKeys.GROUP] = group }
+        dataStore.edit { preferences -> preferences[GROUP_KEY] = group }
 
 }

@@ -10,15 +10,14 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-data class GroupsUIState(
-    var groups: List<Group> = emptyList(),
-    var isLoading: Boolean = false,
-    var error: String? = null
+data class GroupsUiState(
+    val groups: List<Group> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
 )
 
 @HiltViewModel
@@ -27,23 +26,15 @@ class GroupsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private val isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val error: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val isLoading = MutableStateFlow(false)
+    private val error = MutableStateFlow<String?>(null)
 
-    private val _selectedGroup: MutableStateFlow<String> = MutableStateFlow("")
-    val selectedGroup = _selectedGroup.asStateFlow()
-
-    val uiState: StateFlow<GroupsUIState> = combine(
+    val uiState: StateFlow<GroupsUiState> = combine(
         repository.observeGroups(), isLoading, error
-    ) { groups, isLoading, isError -> GroupsUIState(groups, isLoading, isError) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupsUIState())
+    ) { groups, loading, errorMessage -> GroupsUiState(groups, loading, errorMessage) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupsUiState())
 
     init {
-        viewModelScope.launch {
-            settingsRepository.group.collect { group ->
-                _selectedGroup.value = group
-            }
-        }
         refresh()
     }
 
@@ -51,7 +42,9 @@ class GroupsViewModel @Inject constructor(
         viewModelScope.launch {
             isLoading.value = true
             error.value = null
-            repository.refreshGroups()
+            repository.refreshGroups().onFailure { throwable ->
+                error.value = throwable.message ?: "Не удалось загрузить список групп"
+            }
             isLoading.value = false
         }
     }
