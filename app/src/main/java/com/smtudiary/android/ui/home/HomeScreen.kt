@@ -1,203 +1,59 @@
 package com.smtudiary.android.ui.home
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.smtudiary.android.data.model.Lesson
-
-private val days = listOf("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
-private val shortDays = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб")
+import java.time.LocalDate
 
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
-) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val lessons by viewModel.lessons.collectAsStateWithLifecycle()
-
-    val dayIndex = getDayIndex()
-    val weeksAhead = if (dayIndex != 6) 0L else 1L
-    var selectedDay by remember {
-        mutableIntStateOf(
-            if (dayIndex != 6) dayIndex else 0
-        )
+    val today = LocalDate.now(scheduleZone)
+    var selectedEpochDay by rememberSaveable {
+        mutableLongStateOf(initialScheduleDate(today).toEpochDay())
+    }
+    val selectedDate = LocalDate.ofEpochDay(selectedEpochDay)
+    val loadedLessons = (lessons as? HomeUiState.Success)?.lessons
+    val nextDate = nextScheduleDate(today)
+    val nextLabel = if (nextDate == today.plusDays(1)) "Завтра" else formatScheduleDate(nextDate)
+    val nextSummary = when (val state = lessons) {
+        is HomeUiState.Success -> lessonSummary(lessonsOnDate(state.lessons, nextDate))
+        HomeUiState.Error -> "Ошибка загрузки"
+        HomeUiState.Loading -> "Загрузка"
     }
 
     Scaffold { initialPadding ->
-        Column(modifier = Modifier.padding(initialPadding)) {
-            Box(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    AnimatedContent(
-                        targetState = selectedDay,
-                        transitionSpec = { dayFadeTransition() },
-                        label = "dayTitle",
-                    ) { day ->
-                        Text(
-                            text = days[day],
-                            fontWeight = FontWeight.ExtraBold,
-                            fontSize = 28.sp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        repeat(6) { day ->
-                            WeekDay(index = day, selectedDay == day, onClick = { selectedDay = day })
-                        }
-                    }
-                }
-            }
-            when (val state = lessons) {
-                    is HomeUiState.Success -> AnimatedContent(
-                        targetState = selectedDay,
-                        transitionSpec = { dayFadeTransition() },
-                        label = "dayLessons",
-                    ) { day ->
-                        LazyColumn {
-                            items(
-                                items = state.lessons.filter { element ->
-                                    element.day == days[day] && (currentWeekType(
-                                        weekdayInstant(
-                                            dayOfWeek = dayOfWeekByIndex(day),
-                                            weeksAhead = weeksAhead
-                                        )
-                                    ) == element.week)
-                                },
-                                key = { it.id }
-                            ) { LessonCard(it) }
-                        }
-                    }
-                    HomeUiState.Error -> Text("Не удалось загрузить расписание")
-                    HomeUiState.Loading -> Text("Загрузка...")
-            }
-        }
-    }
-
-}
-
-private const val DAY_FADE_DURATION = 150
-
-private fun dayFadeTransition() = ContentTransform(
-    targetContentEnter = fadeIn(tween(DAY_FADE_DURATION, delayMillis = DAY_FADE_DURATION)),
-    initialContentExit = fadeOut(tween(DAY_FADE_DURATION)),
-    sizeTransform = null,
-)
-
-@Composable
-private fun LessonCard(lesson: Lesson) {
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(12.dp)
-                )
-        ) {
-            Box(modifier = Modifier.padding(16.dp)) {
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(
-                        text = lesson.name.orEmpty(),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.background
-                    )
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.background,
-                        modifier = Modifier.height(1.dp)
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = lesson.time,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.background
-                        )
-                        Text(
-                            text = lesson.room,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.background
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun RowScope.WeekDay(index: Int, selected: Boolean, onClick: () -> Unit) {
-    val backgroundColor by animateColorAsState(
-        targetValue = if (selected) MaterialTheme.colorScheme.primary
-        else MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
-    )
-
-    Surface (
-        modifier = Modifier
-            .weight(1f)
-            .height(72.dp),
-        color = backgroundColor,
-        shape = RoundedCornerShape(8.dp),
-        onClick = onClick
-    ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxSize().padding(initialPadding)
+                .padding(vertical = 12.dp, horizontal = 24.dp)
         ) {
-            Text(
-                text = shortDays[index],
-                color = MaterialTheme.colorScheme.background,
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
-            )
-            Text(
-                text = weekdayString(dayIndex = index),
-                color = MaterialTheme.colorScheme.background,
-                fontWeight = FontWeight.Bold,
-                fontSize = 22.sp
+            Column(modifier = Modifier.weight(1f)) {
+                ScheduleHeader(loadedLessons?.firstOrNull()?.group ?: "Расписание группы")
+                ScheduleTitle(
+                    date = selectedDate,
+                    onPreviousWeek = { selectedEpochDay = selectedDate.minusWeeks(1).toEpochDay() },
+                    onNextWeek = { selectedEpochDay = selectedDate.plusWeeks(1).toEpochDay() }
+                )
+                ScheduleWeek(
+                    weekStart = selectedDate.startOfWeek(),
+                    selectedDate = selectedDate,
+                    onDaySelected = { selectedEpochDay = it.toEpochDay() }
+                )
+                DaySchedule(lessons, selectedDate, Modifier.weight(1f))
+            }
+            NextDayButton(
+                text = "$nextLabel · $nextSummary",
+                onClick = { selectedEpochDay = nextDate.toEpochDay() }
             )
         }
     }

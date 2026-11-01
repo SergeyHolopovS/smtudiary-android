@@ -2,13 +2,12 @@ package com.smtudiary.android.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.smtudiary.android.data.local.AppDatabase
 import com.smtudiary.android.data.local.GroupsDao
 import com.smtudiary.android.data.local.LessonsDao
+import com.smtudiary.android.data.local.settingsDataStore
 import com.smtudiary.android.data.repository.SettingsRepository
 import dagger.Module
 import dagger.Provides
@@ -37,11 +36,7 @@ object DatabaseModule {
     fun provideDataStore(
         @ApplicationContext ctx: Context
     ): DataStore<Preferences> =
-        PreferenceDataStoreFactory.create(
-            produceFile = {
-                ctx.preferencesDataStoreFile("settings")
-            }
-        )
+        ctx.settingsDataStore
 
     @Provides @Singleton
     fun provideSettingsRepository(

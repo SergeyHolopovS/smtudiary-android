@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <!-- Шапка отделена от листа просветом, пары вырезаны из листа -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M31,42.5V38A6,6 0,0 1,37,32H71A6,6 0,0 1,77,38V42.5Z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:fillType="evenOdd"
-        android:pathData="M31,45.5H77V72A6,6 0,0 1,71,78H37A6,6 0,0 1,31,72ZM39.5,50H68.5A2.5,2.5 0,0 1,68.5,55H39.5A2.5,2.5 0,0 1,39.5,50ZM39.5,59H68.5A2.5,2.5 0,0 1,68.5,64H39.5A2.5,2.5 0,0 1,39.5,59ZM39.5,68H58.5A2.5,2.5 0,0 1,58.5,73H39.5A2.5,2.5 0,0 1,39.5,68Z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M42,27A2,2 0,0 1,44,29V35A2,2 0,0 1,40,35V29A2,2 0,0 1,42,27ZM66,27A2,2 0,0 1,68,29V35A2,2 0,0 1,64,35V29A2,2 0,0 1,66,27Z" />
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <group android:translateY="-3">
+        <path android:fillColor="#FFFFFF" android:pathData="M36.0,46A3.0,3.0 0,0 1,39,49.0V65.0A3.0,3.0 0,0 1,33,65.0V49.0A3.0,3.0 0,0 1,36.0,46Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M45.0,38A3.0,3.0 0,0 1,48,41.0V73.0A3.0,3.0 0,0 1,42,73.0V41.0A3.0,3.0 0,0 1,45.0,38Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M54.0,30A3.0,3.0 0,0 1,57,33.0V81.0A3.0,3.0 0,0 1,51,81.0V33.0A3.0,3.0 0,0 1,54.0,30Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M63.0,40A3.0,3.0 0,0 1,66,43.0V71.0A3.0,3.0 0,0 1,60,71.0V43.0A3.0,3.0 0,0 1,63.0,40Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M72.0,47A3.0,3.0 0,0 1,75,50.0V64.0A3.0,3.0 0,0 1,69,64.0V50.0A3.0,3.0 0,0 1,72.0,47Z" />
+    </group>
 </vector>

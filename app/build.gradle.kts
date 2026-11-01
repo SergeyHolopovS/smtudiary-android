@@ -51,6 +51,7 @@ ksp {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.foundation)
     // Settings storage
     implementation(libs.androidx.datastore.preferences)
 
