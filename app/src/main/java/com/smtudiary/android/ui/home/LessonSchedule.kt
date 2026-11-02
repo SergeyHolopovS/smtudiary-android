@@ -8,12 +8,11 @@ private val lessonDays = listOf(
     "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"
 )
 
-private val timeSeparator = Regex("[-–—]")
 private val startTimePattern = Regex("^(\\d{1,2}):(\\d{2})$")
 
-fun Lesson.startTimeText(): String = time.split(timeSeparator, limit = 2).first().trim()
+fun Lesson.startTimeText(): String = start.trim()
 
-fun Lesson.endTimeText(): String = time.split(timeSeparator, limit = 2).getOrNull(1)?.trim().orEmpty()
+fun Lesson.endTimeText(): String = end.trim()
 
 private fun Lesson.startTime(): LocalTime? =
     startTimePattern.matchEntire(startTimeText())?.let { match ->

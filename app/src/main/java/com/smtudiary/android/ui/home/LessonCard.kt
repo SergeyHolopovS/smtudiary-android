@@ -59,7 +59,7 @@ internal fun LessonCard(lesson: Lesson) {
                 modifier = Modifier
                     .padding(
                         top = 14.dp,
-                        bottom = 26.dp,
+                        bottom = 24.dp,
                         start = 14.dp,
                         end = 14.dp
                     )
@@ -77,10 +77,17 @@ internal fun LessonCard(lesson: Lesson) {
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSecondary
                     )
-                    Box(
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.CenterEnd
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Text(
+                            text = lesson.type ?: "Неизвестно",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically

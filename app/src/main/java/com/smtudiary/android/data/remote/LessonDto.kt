@@ -8,9 +8,13 @@ data class LessonDto(
 
     val name : String?,
 
-    val time : String,
+    val start : String,
+
+    val end : String,
 
     val teacher : String?,
+
+    val type : String?,
 
     val week: WeekType,
 

@@ -8,15 +8,15 @@ import java.time.LocalDate
 import java.util.UUID
 
 class LessonScheduleTest {
-    private fun lesson(time: String, day: String = "Понедельник", week: WeekType = WeekType.UPPER) =
-        Lesson(UUID.randomUUID(), "Математика", time, null, week, "101", "ИС-24-1", day)
+    private fun lesson(start: String, end: String = "", day: String = "Понедельник", week: WeekType = WeekType.UPPER) =
+        Lesson(UUID.randomUUID(), "Математика", start, end, null, null, week, "101", "ИС-24-1", day)
 
     @Test
     fun `schedule filters day and week and sorts by actual start time`() {
-        val early = lesson("9:00–10:30")
-        val late = lesson("11:00 - 12:30")
-        val lessons = listOf(late, lesson("08:00-09:30", week = WeekType.LOWER),
-            lesson("08:00-09:30", day = "Вторник"), early)
+        val early = lesson("9:00", "10:30")
+        val late = lesson("11:00", "12:30")
+        val lessons = listOf(late, lesson("08:00", "09:30", week = WeekType.LOWER),
+            lesson("08:00", "09:30", day = "Вторник"), early)
 
         assertEquals(listOf(early, late), lessonsOnDate(lessons, LocalDate.of(2026, 9, 14)))
         assertEquals("2 пары · начало в 9:00", lessonSummary(listOf(late, early)))
@@ -27,7 +27,7 @@ class LessonScheduleTest {
         assertEquals("Нет пар", lessonSummary(emptyList()))
         assertEquals("1 пара", lessonSummary(listOf(lesson("уточняется"))))
         assertEquals("", lesson("уточняется").endTimeText())
-        assertEquals("10:30", lesson("9:00 — 10:30").endTimeText())
+        assertEquals("10:30", lesson("9:00", "10:30").endTimeText())
     }
 
     @Test
