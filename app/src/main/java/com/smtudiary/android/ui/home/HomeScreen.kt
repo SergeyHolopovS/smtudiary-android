@@ -16,7 +16,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.time.LocalDate
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+    onNavigateSettings: () -> Unit
+) {
     val lessons by viewModel.lessons.collectAsStateWithLifecycle()
     val today = LocalDate.now(scheduleZone)
     var selectedEpochDay by rememberSaveable {
@@ -38,7 +41,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 .padding(vertical = 12.dp, horizontal = 24.dp)
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                ScheduleHeader(loadedLessons?.firstOrNull()?.group ?: "Расписание группы")
+                ScheduleHeader(
+                    groupName =  loadedLessons?.firstOrNull()?.group ?: "Расписание группы",
+                    onNavigateSettings = onNavigateSettings
+                )
                 ScheduleTitle(
                     date = selectedDate,
                     onPreviousWeek = { selectedEpochDay = selectedDate.minusWeeks(1).toEpochDay() },

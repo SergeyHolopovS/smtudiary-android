@@ -10,9 +10,12 @@ import androidx.navigation.compose.rememberNavController
 import com.smtudiary.android.ui.groups.GroupsScreen
 import com.smtudiary.android.ui.home.HomeScreen
 import com.smtudiary.android.ui.loading.LoadingScreen
+import com.smtudiary.android.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable data object ChooseGroupRoute
+
+@Serializable data object SettingsRoute
 
 @Serializable data class HomeRoute(val group: String)
 
@@ -42,7 +45,25 @@ fun AppNavigation(
         startDestination = startDestination
     ) {
         composable<HomeRoute> {
-            HomeScreen()
+            HomeScreen(
+                onNavigateSettings = {
+                    navController.navigate(SettingsRoute){
+                        popUpTo<HomeRoute> {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+
+        composable<SettingsRoute> {
+            SettingsScreen { currentGroup ->
+                navController.navigate(HomeRoute(currentGroup)) {
+                    popUpTo<SettingsRoute> {
+                        inclusive = true
+                    }
+                }
+            }
         }
 
         composable<ChooseGroupRoute> {

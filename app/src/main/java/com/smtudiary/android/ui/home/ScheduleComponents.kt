@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 
 @Composable
-internal fun ScheduleHeader(groupName: String) {
+internal fun ScheduleHeader(groupName: String, onNavigateSettings: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -73,6 +73,7 @@ internal fun ScheduleHeader(groupName: String) {
             color = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onSecondary,
             modifier = Modifier.size(36.dp),
+            onClick = { onNavigateSettings() }
         ) {
             Box(
                 modifier = Modifier
