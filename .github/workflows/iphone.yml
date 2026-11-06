@@ -1,0 +1,35 @@
+name: iPhone build
+
+on:
+  push:
+    branches: [codex/ios-build]
+    paths:
+      - 'iOS/**'
+      - '.github/workflows/iphone.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ipa:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build for iPhone
+        run: |
+          xcodebuild -project iOS/SMTUDiary.xcodeproj -scheme SMTUDiary \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/diary-build" CODE_SIGNING_ALLOWED=NO build
+      - name: Package IPA
+        run: |
+          mkdir Payload
+          cp -R "$RUNNER_TEMP/diary-build/Build/Products/Release-iphoneos/SMTUDiary.app" Payload/
+          ditto -c -k --keepParent Payload SMTUDiary.ipa
+          unzip -tq SMTUDiary.ipa
+      - uses: actions/upload-artifact@v6
+        with:
+          name: SMTUDiary-iPhone
+          path: SMTUDiary.ipa
+          if-no-files-found: error
